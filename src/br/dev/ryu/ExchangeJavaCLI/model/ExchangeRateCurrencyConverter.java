@@ -60,8 +60,10 @@ public class ExchangeRateCurrencyConverter extends WebApiConnector implements Cu
         return currencies;
     }
 
-    // TODO: Cria retorno da quantidade do uso da API disponivél
-    // public void getQuota() throws IOException, InterruptedException {
-    //    URI endpoint = URI.create(this.baseUri + this.apiKey + "/quota");
+    public ExchangeRateQuota getQuota() throws IOException, InterruptedException {
+        URI endpoint = URI.create(this.baseUri + this.apiKey + "/quota");
+        HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(20));
+        return this.gson.fromJson(response.body(), ExchangeRateQuota.class);
+    }
 
 }
