@@ -7,7 +7,6 @@ import br.dev.ryu.ExchangeJavaCLI.presenter.Day;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class CommandLineView implements View {
@@ -38,27 +37,21 @@ public class CommandLineView implements View {
         System.out.println("(0) Exit");
         printHorizontalBar("_");
 
-        int option = -1;
+        int option = scanner.nextInt();
 
-        while (option < 0 || option > 8) {
-            try {
-                option = scanner.nextInt();
-            } catch (NoSuchElementException | IllegalStateException e) {
-                option = -1;
-            }
-
-            if (option > 0 && option < 8) {
-                System.out.println("What amount do you want to convert?");
-                double amount = scanner.nextDouble();
-                this.presenter.handleStartMenu(option, amount);
-            } else if (option == 0) {
-                printHorizontalBar("~");
-                System.out.println("Thank you for using ExchangeJava! \nClosing the app...");
-            } else {
-                printHorizontalBar("|");
-                System.out.println(option + " is not a valid option!!!");
-                printHorizontalBar("|");
-            }
+        if (option > 0 && option < 8) {
+            System.out.println("What amount do you want to convert?");
+            double amount = scanner.nextDouble();
+            this.presenter.handleStartMenu(option, amount);
+        } else if (option == 0) {
+            printHorizontalBar("~");
+            System.out.println("Thank you for using ExchangeJava! \nClosing the app...");
+        } else if (option == 8){
+            this.presenter.handleStartMenu(option, 0);
+        } else {
+            printHorizontalBar("|");
+            System.out.println(option + " is not a valid option!!!");
+            printHorizontalBar("|");
         }
     }
 
