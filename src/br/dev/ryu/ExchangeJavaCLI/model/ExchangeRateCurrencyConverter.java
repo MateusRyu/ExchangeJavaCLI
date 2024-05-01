@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 
 public class ExchangeRateCurrencyConverter extends WebApiConnector implements CurrencyConverter {
     private final String apiKey;
@@ -24,9 +25,10 @@ public class ExchangeRateCurrencyConverter extends WebApiConnector implements Cu
     }
 
     private void updateCurrencyRates(Currency currency) throws IOException, InterruptedException {
-        URI endpoint = URI.create(this.baseUri + this.apiKey + "/" + currency.code());
-        HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(20));
-        ExchangeRateConversionRates data = this.gson.fromJson(response.body(), ExchangeRateConversionRates.class);
+        URI endpoint = URI.create(this.baseUri + this.apiKey + "/latest/" + currency.code());
+        HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(60));
+        ExchangeRateConversionRates data = gson.fromJson(response.body(), ExchangeRateConversionRates.class);
+
         CurrencyRates currencyRates = new CurrencyRates(
                 currency,
                 data.conversionRates(),
@@ -52,9 +54,10 @@ public class ExchangeRateCurrencyConverter extends WebApiConnector implements Cu
         URI endpoint = URI.create(this.baseUri + this.apiKey + "/codes");
         HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(20));
         HashMap<String, Currency> currencies = new HashMap<>();
-        ExchangeRateSupportedCurrencies data = this.gson.fromJson(response.body(), ExchangeRateSupportedCurrencies.class);
-        for (Currency i : data.supportedCodes()) {
-            Currency currency = new Currency( i.code(), i.name());
+        ExchangeRateSupportedCurrencies data = gson.fromJson(response.body(), ExchangeRateSupportedCurrencies.class);
+        for (int i = 0; i < data.supportedCodes().size(); i++) {
+            List<String> ApiCurrency = data.supportedCodes().get(i);
+            Currency currency = new Currency( ApiCurrency.getFirst(), ApiCurrency.getLast());
             currencies.put(currency.code(), currency);
         }
         return currencies;
@@ -63,7 +66,7 @@ public class ExchangeRateCurrencyConverter extends WebApiConnector implements Cu
     public ExchangeRateQuota getQuota() throws IOException, InterruptedException {
         URI endpoint = URI.create(this.baseUri + this.apiKey + "/quota");
         HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(20));
-        return this.gson.fromJson(response.body(), ExchangeRateQuota.class);
+        return gson.fromJson(response.body(), ExchangeRateQuota.class);
     }
 
 }
