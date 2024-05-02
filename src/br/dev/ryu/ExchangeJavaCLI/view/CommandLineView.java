@@ -24,7 +24,6 @@ public class CommandLineView implements View {
 
     public void displayStartMenu() {
         printHorizontalBar("-");
-        System.out.println("Be welcome to ExchangeJavaCLI!!!");
         System.out.println("Enter the number corresponding to the desired option and then press the [ENTER] button:");
         System.out.println("(1) United States Dollar (USD) to Argentine Peso (ARS)");
         System.out.println("(2) Argentine Peso (ARS) to United States Dollar (USD)");
@@ -91,5 +90,9 @@ public class CommandLineView implements View {
         System.out.println("Your current plan allows for " + planQuota + " requests per month.");
         System.out.println("You have " + requestsRemaining + " requests remaining this month.");
         System.out.println("Your quota will refresh on the " + refreshDayOfMonth + " day of the next month.");
+    }
+
+    public void displayWelcome() {
+        System.out.println("Be welcome to ExchangeJavaCLI!!!");
     }
 }
