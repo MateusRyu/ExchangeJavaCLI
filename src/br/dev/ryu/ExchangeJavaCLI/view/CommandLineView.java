@@ -1,6 +1,7 @@
 package br.dev.ryu.ExchangeJavaCLI.view;
 
 
+import br.dev.ryu.ExchangeJavaCLI.model.ApiConfig;
 import br.dev.ryu.ExchangeJavaCLI.model.Currency;
 import br.dev.ryu.ExchangeJavaCLI.presenter.CurrencyPresenter;
 import br.dev.ryu.ExchangeJavaCLI.presenter.Day;
@@ -94,5 +95,15 @@ public class CommandLineView implements View {
 
     public void displayWelcome() {
         System.out.println("Be welcome to ExchangeJavaCLI!!!");
+    }
+
+    public ApiConfig requestConfig() {
+        System.out.println("App need be configured. Please, type...");
+        System.out.println("The ExchangeRate API key:");
+        String key = scanner.nextLine();
+        System.out.println("The ExchangeRate API version:");
+        String version = scanner.nextLine();
+
+        return new ApiConfig(key, version);
     }
 }
