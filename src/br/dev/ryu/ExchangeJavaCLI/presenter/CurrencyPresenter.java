@@ -9,13 +9,18 @@ import java.util.List;
 
 public class CurrencyPresenter {
     private final View view;
-    private final CurrencyConverter currencyConverter;
+    private CurrencyConverter currencyConverter;
     private HashMap<String, Currency> supportedCurrencies;
 
-    public CurrencyPresenter(View view, CurrencyConverter currencyConverter) {
+    public CurrencyPresenter(View view) {
         this.view = view;
-        this.currencyConverter = currencyConverter;
+    }
 
+    public void buildCurrencyConverter(ApiConfig config) {
+        this.currencyConverter = new ExchangeRateCurrencyConverter(config.key(), config.version());
+    }
+
+    public void updateCurrencies() {
         try {
             this.supportedCurrencies = this.currencyConverter.getCurrencies();
         } catch (IOException | InterruptedException e) {
@@ -25,7 +30,11 @@ public class CurrencyPresenter {
         }
     }
 
-    public void run() {
+    public void displayWelcome() {
+        this.view.displayWelcome();
+    }
+
+    public void displayStartMenu() {
         try {
             this.view.displayStartMenu();
         } catch (Exception e) {

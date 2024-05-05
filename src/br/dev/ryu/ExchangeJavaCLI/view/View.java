@@ -1,5 +1,6 @@
 package br.dev.ryu.ExchangeJavaCLI.view;
 
+import br.dev.ryu.ExchangeJavaCLI.model.ApiConfig;
 import br.dev.ryu.ExchangeJavaCLI.model.Currency;
 import br.dev.ryu.ExchangeJavaCLI.presenter.CurrencyPresenter;
 import br.dev.ryu.ExchangeJavaCLI.presenter.Day;
@@ -14,4 +15,6 @@ public interface View {
     void displayError(String message);
     List<String> requestConversion();
     void displayQuota(int planQuota, int requestsRemaining, Day refreshDayOfMonth);
+    ApiConfig requestConfig();
+    void displayWelcome();
 }
