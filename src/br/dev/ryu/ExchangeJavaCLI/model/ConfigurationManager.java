@@ -19,18 +19,6 @@ public class ConfigurationManager {
         this.gson = new Gson();
     }
 
-    public ConfigurationManager(String configFilePath, ApiConfig apiConfig) {
-        this.configFilePath = configFilePath;
-        this.configFile = new File(configFilePath);
-        this.gson = new Gson();
-        String json = gson.toJson(apiConfig);
-        try (FileWriter writer = new FileWriter(configFilePath)) {
-            writer.write(json);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not write the config file");
-        }
-    }
-
     public ApiConfig getApiConfig() {
         ApiConfig config;
         if (this.configFile.exists()) {
@@ -49,4 +37,12 @@ public class ConfigurationManager {
     }
 
 
+    public void setApiConfig(ApiConfig apiConfig) {
+        String json = this.gson.toJson(apiConfig);
+        try (FileWriter writer = new FileWriter(this.configFilePath)) {
+            writer.write(json);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not write the config file");
+        }
+    }
 }
