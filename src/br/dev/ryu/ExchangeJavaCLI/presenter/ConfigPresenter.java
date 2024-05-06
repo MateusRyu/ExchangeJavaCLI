@@ -5,18 +5,17 @@ import br.dev.ryu.ExchangeJavaCLI.model.ConfigurationManager;
 import br.dev.ryu.ExchangeJavaCLI.view.View;
 
 public class ConfigPresenter {
-    private ConfigurationManager config;
+    private final ConfigurationManager CONFIG;
 
     public ConfigPresenter(String configFilePath, View view) {
-        try {
-            this.config = new ConfigurationManager(configFilePath);
-        } catch (Exception e){
+        this.CONFIG = new ConfigurationManager(configFilePath);
+        if (!this.CONFIG.configExists()) {
             ApiConfig apiConfig = view.requestConfig();
-            this.config = new ConfigurationManager(configFilePath, apiConfig);
+            this.CONFIG.setApiConfig(apiConfig);
         }
     }
 
     public ApiConfig getApiConfig() {
-        return config.getApiConfig();
+        return CONFIG.getApiConfig();
     }
 }
