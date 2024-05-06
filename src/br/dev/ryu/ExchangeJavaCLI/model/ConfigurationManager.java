@@ -19,9 +19,13 @@ public class ConfigurationManager {
         this.gson = new Gson();
     }
 
+    public boolean configExists() {
+        return this.configFile.exists() && this.configFile.length() > 0;
+    }
+
     public ApiConfig getApiConfig() {
         ApiConfig config;
-        if (this.configFile.exists()) {
+        if (configExists()) {
             try {
                 Scanner scanner = new Scanner(this.configFile);
                 StringBuilder json = new StringBuilder();
