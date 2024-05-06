@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class CommandLineView implements View {
     private CurrencyPresenter presenter;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner SCANNER = new Scanner(System.in);
 
     public void setPresenter(CurrencyPresenter presenter) {
         this.presenter = presenter;
@@ -37,11 +37,11 @@ public class CommandLineView implements View {
         System.out.println("(0) Exit");
         printHorizontalBar("_");
 
-        int option = scanner.nextInt();
+        int option = SCANNER.nextInt();
 
         if (option > 0 && option < 8) {
             System.out.println("What amount do you want to convert?");
-            double amount = scanner.nextDouble();
+            double amount = SCANNER.nextDouble();
             this.presenter.handleStartMenu(option, amount);
         } else if (option == 0) {
             printHorizontalBar("~");
@@ -62,14 +62,14 @@ public class CommandLineView implements View {
         System.out.println();
         while (awaiting) {
             System.out.println("Press Enter to continue...");
-            awaiting = Boolean.parseBoolean(scanner.nextLine());    
+            awaiting = Boolean.parseBoolean(SCANNER.nextLine());
         }
     }
 
     public boolean displayRetryMenu(String menuMessage) {
         System.out.println(menuMessage);
         System.out.println("Reply with 'Yes' or 'Not'.");
-        String answer = scanner.nextLine();
+        String answer = SCANNER.nextLine();
         answer = answer.toLowerCase();
         return answer.equals("yes");
     }
@@ -81,9 +81,9 @@ public class CommandLineView implements View {
     public List<String> requestConversion() {
         System.out.println("What is the currency base code?");
         List<String> currenciesCode = new LinkedList<>();
-        currenciesCode.add(scanner.nextLine());
+        currenciesCode.add(SCANNER.nextLine());
         System.out.println("What is the currency target code?");
-        currenciesCode.add(scanner.nextLine());
+        currenciesCode.add(SCANNER.nextLine());
         return currenciesCode;
     }
 
@@ -100,9 +100,9 @@ public class CommandLineView implements View {
     public ApiConfig requestConfig() {
         System.out.println("App need be configured. Please, type...");
         System.out.println("The ExchangeRate API key:");
-        String key = scanner.nextLine();
+        String key = SCANNER.nextLine();
         System.out.println("The ExchangeRate API version:");
-        String version = scanner.nextLine();
+        String version = SCANNER.nextLine();
 
         return new ApiConfig(key, version);
     }

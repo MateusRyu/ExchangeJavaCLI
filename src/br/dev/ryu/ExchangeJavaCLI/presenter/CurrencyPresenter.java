@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CurrencyPresenter {
-    private final View view;
+    private final View VIEW;
     private CurrencyConverter currencyConverter;
     private HashMap<String, Currency> supportedCurrencies;
 
     public CurrencyPresenter(View view) {
-        this.view = view;
+        this.VIEW = view;
     }
 
     public void buildCurrencyConverter(ApiConfig config) {
@@ -24,21 +24,21 @@ public class CurrencyPresenter {
         try {
             this.supportedCurrencies = this.currencyConverter.getCurrencies();
         } catch (IOException | InterruptedException e) {
-            this.view.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
+            this.VIEW.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
         } catch (Exception e) {
-            this.view.displayError("An unexpected error occurred during the process.\n" + e.getMessage());
+            this.VIEW.displayError("An unexpected error occurred during the process.\n" + e.getMessage());
         }
     }
 
     public void displayWelcome() {
-        this.view.displayWelcome();
+        this.VIEW.displayWelcome();
     }
 
     public void displayStartMenu() {
         try {
-            this.view.displayStartMenu();
+            this.VIEW.displayStartMenu();
         } catch (Exception e) {
-            this.view.displayError(e.getMessage());
+            this.VIEW.displayError(e.getMessage());
         }
     }
 
@@ -66,15 +66,15 @@ public class CurrencyPresenter {
                 handleConversion(amount, "COP", "USD");
                 break;
             case 7:
-                List<String> currencies = this.view.requestConversion();
+                List<String> currencies = this.VIEW.requestConversion();
                 handleConversion(amount, currencies.get(0), currencies.get(1));
-                this.view.displayStartMenu();
+                this.VIEW.displayStartMenu();
                 break;
             case 8:
                 displayQuota();
                 break;
             default:
-                this.view.displayError("Opção inválida");
+                this.VIEW.displayError("Opção inválida");
         }
     }
 
@@ -94,34 +94,34 @@ public class CurrencyPresenter {
                 Currency toCurrency = getCurrency(toCurrencyCode);
                 double rate = this.currencyConverter.convert(amount, fromCurrency, toCurrency);
                 double conversion = amount * rate;
-                view.displayConversionResult(amount, fromCurrency, toCurrency, conversion);
+                VIEW.displayConversionResult(amount, fromCurrency, toCurrency, conversion);
             } catch (CurrencyNotFoundException e) {
-                this.view.displayError(e.getMessage());
+                this.VIEW.displayError(e.getMessage());
             } catch (ConversionRateNotFoundException e) {
-                this.view.displayError(e.getMessage());
+                this.VIEW.displayError(e.getMessage());
             } catch (IOException | InterruptedException e) {
-                this.view.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
+                this.VIEW.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
                 if (e instanceof InterruptedException) {
                     Thread.currentThread().interrupt();
                 }
-                retry = this.view.displayRetryMenu("Want to try the same conversion again? (return to main menu if not)");
+                retry = this.VIEW.displayRetryMenu("Want to try the same conversion again? (return to main menu if not)");
             } catch (Exception e) {
-                this.view.displayError("An unexpected error occurred during the process.\n" + e.getMessage());
+                this.VIEW.displayError("An unexpected error occurred during the process.\n" + e.getMessage());
             }
         }
-        this.view.displayStartMenu();
+        this.VIEW.displayStartMenu();
     }
 
     private void displayQuota() {
         try {
             ExchangeRateQuota quota = this.currencyConverter.getQuota();
             Day refreshDayOfMonth = new Day( quota.refreshDayOfMonth() );
-            this.view.displayQuota( quota.planQuota(), quota.requestsRemaining(), refreshDayOfMonth );
+            this.VIEW.displayQuota( quota.planQuota(), quota.requestsRemaining(), refreshDayOfMonth );
         } catch (IOException e) {
-            this.view.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
+            this.VIEW.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            this.view.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
+            this.VIEW.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
         }
     }
 }

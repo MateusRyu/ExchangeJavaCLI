@@ -12,22 +12,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ExchangeRateCurrencyConverter extends WebApiConnector implements CurrencyConverter {
-    private final String apiKey;
-    private final HashMap<String, CurrencyRates> currencyRates = new HashMap<>();
-    private final Gson gson = new GsonBuilder()
+    private final String API_KEY;
+    private final HashMap<String, CurrencyRates> CURRENCY_RATES = new HashMap<>();
+    private final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
 
     public ExchangeRateCurrencyConverter(String apiKey, String version) {
         setBaseUrl("https://v6.exchangerate-api.com/"       + version + "/");
-        this.apiKey = apiKey;
+        this.API_KEY = apiKey;
 
     }
 
     private void updateCurrencyRates(Currency currency) throws IOException, InterruptedException {
-        URI endpoint = URI.create(this.baseUri + this.apiKey + "/latest/" + currency.code());
+        URI endpoint = URI.create(this.baseUri + this.API_KEY + "/latest/" + currency.code());
         HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(60));
-        ExchangeRateConversionRates data = gson.fromJson(response.body(), ExchangeRateConversionRates.class);
+        ExchangeRateConversionRates data = GSON.fromJson(response.body(), ExchangeRateConversionRates.class);
 
         CurrencyRates currencyRates = new CurrencyRates(
                 currency,
@@ -35,26 +35,26 @@ public class ExchangeRateCurrencyConverter extends WebApiConnector implements Cu
                 data.timeLastUpdateUnix(),
                 data.timeNextUpdateUnix()
         );
-        this.currencyRates.put(currency.code(), currencyRates);
+        this.CURRENCY_RATES.put(currency.code(), currencyRates);
     }
 
     public double convert(double amount, Currency fromCurrency, Currency toCurrency) throws IOException, InterruptedException {
-        if (!this.currencyRates.containsKey(fromCurrency.code())) {
+        if (!this.CURRENCY_RATES.containsKey(fromCurrency.code())) {
             updateCurrencyRates(fromCurrency);
         }
-        CurrencyRates currencyRates = this.currencyRates.get(fromCurrency.code());
+        CurrencyRates currencyRates = this.CURRENCY_RATES.get(fromCurrency.code());
         if (System.currentTimeMillis() > currencyRates.getTimeNextUpdateUnix()) {
             updateCurrencyRates(fromCurrency);
-            currencyRates = this.currencyRates.get(fromCurrency.code());
+            currencyRates = this.CURRENCY_RATES.get(fromCurrency.code());
         }
         return amount * currencyRates.getRate(toCurrency);
     }
 
     public HashMap<String, Currency> getCurrencies() throws IOException, InterruptedException {
-        URI endpoint = URI.create(this.baseUri + this.apiKey + "/codes");
+        URI endpoint = URI.create(this.baseUri + this.API_KEY + "/codes");
         HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(20));
         HashMap<String, Currency> currencies = new HashMap<>();
-        ExchangeRateSupportedCurrencies data = gson.fromJson(response.body(), ExchangeRateSupportedCurrencies.class);
+        ExchangeRateSupportedCurrencies data = GSON.fromJson(response.body(), ExchangeRateSupportedCurrencies.class);
         for (int i = 0; i < data.supportedCodes().size(); i++) {
             List<String> ApiCurrency = data.supportedCodes().get(i);
             Currency currency = new Currency( ApiCurrency.getFirst(), ApiCurrency.getLast());
@@ -64,9 +64,9 @@ public class ExchangeRateCurrencyConverter extends WebApiConnector implements Cu
     }
 
     public ExchangeRateQuota getQuota() throws IOException, InterruptedException {
-        URI endpoint = URI.create(this.baseUri + this.apiKey + "/quota");
+        URI endpoint = URI.create(this.baseUri + this.API_KEY + "/quota");
         HttpResponse<String> response = requestUri(endpoint, Duration.ofSeconds(20));
-        return gson.fromJson(response.body(), ExchangeRateQuota.class);
+        return GSON.fromJson(response.body(), ExchangeRateQuota.class);
     }
 
 }

@@ -3,13 +3,13 @@ package br.dev.ryu.ExchangeJavaCLI.model;
 import java.util.HashMap;
 
 public class CurrencyRates {
-    private final Currency currency;
+    private final Currency CURRENCY;
     private HashMap<String, Double> conversionRates;
     private int timeLastUpdateUnix;
     private int timeNextUpdateUnix;
 
     public CurrencyRates(Currency currency, HashMap<String, Double> conversionRates, int timeLastUpdateUnix, int timeNextUpdateUnix) {
-        this.currency = currency;
+        this.CURRENCY = currency;
         updateRates(conversionRates, timeLastUpdateUnix, timeNextUpdateUnix);
     }
 
@@ -20,7 +20,7 @@ public class CurrencyRates {
     }
 
     public Currency getCurrency() {
-        return this.currency;
+        return this.CURRENCY;
     }
 
     public double getRate(Currency currency) {
