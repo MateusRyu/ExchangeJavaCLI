@@ -68,11 +68,8 @@ public class CommandLineView implements View {
     }
 
     public boolean displayRetryMenu(String menuMessage) {
-        System.out.println(menuMessage);
-        System.out.println("Reply with 'Yes' or 'Not'.");
-        String answer = SCANNER.nextLine();
-        answer = answer.toLowerCase();
-        return answer.equals("yes");
+        System.out.println(menuMessage + "\nReply with 'Yes' or 'Not'.");
+        return SCANNER.nextLine().equalsIgnoreCase("yes");
     }
 
     public void displayError(String error) {
