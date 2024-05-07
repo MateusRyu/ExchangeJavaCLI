@@ -1,6 +1,5 @@
 package br.dev.ryu.ExchangeJavaCLI.view;
 
-
 import br.dev.ryu.ExchangeJavaCLI.model.ApiConfig;
 import br.dev.ryu.ExchangeJavaCLI.model.Currency;
 import br.dev.ryu.ExchangeJavaCLI.presenter.CurrencyPresenter;
@@ -55,15 +54,17 @@ public class CommandLineView implements View {
         }
     }
 
-    public void displayConversionResult(double amount, Currency fromCurrency, Currency toCurrency, double result) {
-        boolean awaiting = true;
+    public boolean displayConversionResult(double amount, Currency fromCurrency, Currency toCurrency, double result) {
         System.out.println("Conversion completed!");
         System.out.println("Converted from: " + amount + " " + fromCurrency.code() + " to " + result + " " + toCurrency.code());
-        System.out.println();
-        while (awaiting) {
-            System.out.println("Press Enter to continue...");
-            awaiting = Boolean.parseBoolean(SCANNER.nextLine());
-        }
+        return waitUser();
+    }
+
+    public boolean waitUser() {
+        System.out.println("\nEnter the number corresponding to the desired option and then press the [ENTER] button:");
+        System.out.println("(1) Return to main menu");
+        System.out.println("(2) Exit");
+        return ( SCANNER.nextInt() == 1);
     }
 
     public boolean displayRetryMenu(String menuMessage) {

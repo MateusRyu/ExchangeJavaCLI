@@ -10,7 +10,7 @@ import java.util.List;
 public interface View {
     void setPresenter(CurrencyPresenter presenter);
     void displayStartMenu();
-    void displayConversionResult(double amount, Currency fromCurrency, Currency toCurrency, double result);
+    boolean displayConversionResult(double amount, Currency fromCurrency, Currency toCurrency, double result);
     boolean displayRetryMenu(String menuMessage);
     void displayError(String message);
     List<String> requestConversion();
