@@ -82,23 +82,22 @@ public class CurrencyPresenter {
         return this.supportedCurrencies.get(currencyCode);
     }
 
+    private boolean convert(double amount, String fromCurrencyCode, String toCurrencyCode) throws IOException, InterruptedException {
+        Currency fromCurrency = getCurrency(fromCurrencyCode);
+        Currency toCurrency = getCurrency(toCurrencyCode);
+        double rate = this.currencyConverter.convert(amount, fromCurrency, toCurrency);
+        double conversion = amount * rate;
+        return VIEW.displayConversionResult(amount, fromCurrency, toCurrency, conversion);
+    }
+
     private void handleConversion(double amount, String fromCurrencyCode, String toCurrencyCode) {
-        int attempt = 0;
-        final int maxAttempts = 3;
         boolean retry = true;
         boolean runMainMenu = true;
-        while (retry && attempt < maxAttempts) {
+        for (int attempt = 0; attempt < 3 && retry; attempt++) {
             retry = false;
-            attempt++;
             try {
-                Currency fromCurrency = getCurrency(fromCurrencyCode);
-                Currency toCurrency = getCurrency(toCurrencyCode);
-                double rate = this.currencyConverter.convert(amount, fromCurrency, toCurrency);
-                double conversion = amount * rate;
-                runMainMenu = VIEW.displayConversionResult(amount, fromCurrency, toCurrency, conversion);
-            } catch (CurrencyNotFoundException e) {
-                this.VIEW.displayError(e.getMessage());
-            } catch (ConversionRateNotFoundException e) {
+                runMainMenu = convert(amount, fromCurrencyCode, toCurrencyCode);
+            } catch (CurrencyNotFoundException | ConversionRateNotFoundException e) {
                 this.VIEW.displayError(e.getMessage());
             } catch (IOException | InterruptedException e) {
                 this.VIEW.displayError("Process interrupted unexpectedly during currency conversion\n" + e.getMessage());
