@@ -86,6 +86,7 @@ public class CurrencyPresenter {
         int attempt = 0;
         final int maxAttempts = 3;
         boolean retry = true;
+        boolean runMainMenu = true;
         while (retry && attempt < maxAttempts) {
             retry = false;
             attempt++;
@@ -94,7 +95,7 @@ public class CurrencyPresenter {
                 Currency toCurrency = getCurrency(toCurrencyCode);
                 double rate = this.currencyConverter.convert(amount, fromCurrency, toCurrency);
                 double conversion = amount * rate;
-                VIEW.displayConversionResult(amount, fromCurrency, toCurrency, conversion);
+                runMainMenu = VIEW.displayConversionResult(amount, fromCurrency, toCurrency, conversion);
             } catch (CurrencyNotFoundException e) {
                 this.VIEW.displayError(e.getMessage());
             } catch (ConversionRateNotFoundException e) {
@@ -109,7 +110,10 @@ public class CurrencyPresenter {
                 this.VIEW.displayError("An unexpected error occurred during the process.\n" + e.getMessage());
             }
         }
-        this.VIEW.displayStartMenu();
+
+        if (runMainMenu) {
+            this.VIEW.displayStartMenu();
+        }
     }
 
     private void displayQuota() {
