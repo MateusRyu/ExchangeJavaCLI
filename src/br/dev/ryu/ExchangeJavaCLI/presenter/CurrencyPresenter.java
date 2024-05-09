@@ -4,6 +4,8 @@ import br.dev.ryu.ExchangeJavaCLI.model.*;
 import br.dev.ryu.ExchangeJavaCLI.view.View;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,27 +45,30 @@ public class CurrencyPresenter {
     }
 
     public void handleStartMenu(int option, double amount) {
+        List< List<String> > defaultOptions = new ArrayList<>();
+        String defaultOptionsString = """
+                USD,ARS
+                ARS,USD
+                USD,BRL
+                BRL,USD
+                USD,COP
+                COP,USD
+                """;
+        for (String string : Arrays.stream(defaultOptionsString.split("\n")).toList()) {
+            defaultOptions.add(List.of(string.split(",")));
+        }
+
         switch (option) {
             case 0:
                 System.out.println("Exiting app...");
                 break;
             case 1:
-                handleConversion(amount, "USD", "ARS");
-                break;
             case 2:
-                handleConversion(amount, "ARS", "USD");
-                break;
             case 3:
-                handleConversion(amount, "USD", "BRL");
-                break;
             case 4:
-                handleConversion(amount, "BRL", "USD");
-                break;
             case 5:
-                handleConversion(amount, "USD", "COP");
-                break;
             case 6:
-                handleConversion(amount, "COP", "USD");
+                handleConversion(amount, defaultOptions.get(option-1).getFirst(), defaultOptions.get(option-1).getLast());
                 break;
             case 7:
                 List<String> currencies = this.VIEW.requestConversion();
