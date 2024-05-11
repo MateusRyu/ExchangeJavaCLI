@@ -16,7 +16,7 @@ public class Logger {
         LOG_FILE = log_file;
     }
 
-    public static void log(String message, LogLevel level) {
+    public static synchronized void log(String message, LogLevel level) {
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedTime = currentTime.format(formatter);
