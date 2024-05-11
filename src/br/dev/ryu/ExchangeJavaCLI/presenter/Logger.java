@@ -12,7 +12,7 @@ public class Logger {
         DEBUG, INFO, WARNING, ERROR
     }
 
-    public Logger(String log_file) {
+    public static void setLogFile(String log_file) {
         LOG_FILE = log_file;
     }
 
