@@ -1,31 +1,38 @@
 package br.dev.ryu.ExchangeJavaCLI.presenter;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Logger {
-    private static String LOG_FILE;
     private static DateTimeFormatter FORMATTER;
+    private static BufferedWriter writer;
 
     public enum LogLevel {
         DEBUG, INFO, WARNING, ERROR
     }
 
-    public static void setup(String log_file, String dateTimePattern) {
-        LOG_FILE = log_file;
+    public static void open(String log_file, String dateTimePattern) throws IOException {
         FORMATTER = DateTimeFormatter.ofPattern(dateTimePattern);
+        writer = new BufferedWriter(new FileWriter(log_file, true));
+    }
+
+    public static void close() throws IOException {
+        if (writer != null) {
+            writer.close();
+        }
     }
 
     public static synchronized void log(String message, LogLevel level) {
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(FORMATTER);
-
         String logMessage = String.format("[%s] [%s] %s", formattedTime, level, message);
 
-        try (FileWriter writer = new FileWriter(LOG_FILE, true)) {
+        try {
             writer.write(logMessage);
+            writer.flush();
         } catch (IOException e) {
             System.err.println("Error: Could not write the log file: " + e.getMessage());
         }
