@@ -7,19 +7,20 @@ import java.time.format.DateTimeFormatter;
 
 public class Logger {
     private static String LOG_FILE;
+    private static DateTimeFormatter FORMATTER;
 
     public enum LogLevel {
         DEBUG, INFO, WARNING, ERROR
     }
 
-    public static void setLogFile(String log_file) {
+    public static void setup(String log_file, String dateTimePattern) {
         LOG_FILE = log_file;
+        FORMATTER = DateTimeFormatter.ofPattern(dateTimePattern);
     }
 
     public static synchronized void log(String message, LogLevel level) {
         LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
+        String formattedTime = currentTime.format(FORMATTER);
 
         String logMessage = String.format("[%s] [%s] %s", formattedTime, level, message);
 
