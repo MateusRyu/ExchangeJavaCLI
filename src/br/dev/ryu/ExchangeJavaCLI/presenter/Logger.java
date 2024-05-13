@@ -7,15 +7,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Logger {
-    private static DateTimeFormatter FORMATTER;
+    private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static BufferedWriter writer;
 
     public enum LogLevel {
         DEBUG, INFO, WARNING, ERROR
     }
 
-    public static void open(String log_file, String dateTimePattern) throws IOException {
+    public static void setDateTimeFormatter(String dateTimePattern) {
         FORMATTER = DateTimeFormatter.ofPattern(dateTimePattern);
+    }
+
+    public static void open(String log_file) throws IOException {
         writer = new BufferedWriter(new FileWriter(log_file, true));
     }
 
