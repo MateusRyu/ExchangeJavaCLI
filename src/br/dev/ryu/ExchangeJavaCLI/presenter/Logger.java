@@ -8,52 +8,58 @@ import java.time.format.DateTimeFormatter;
 
 public class Logger {
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static BufferedWriter writer;
+    private final String logFile;
+    private BufferedWriter writer;
 
     public enum LogLevel {
         DEBUG, INFO, WARNING, ERROR
+    }
+
+    public Logger(String logFile) throws IOException {
+        this.logFile = logFile;
+        open();
     }
 
     public static void setDateTimeFormatter(String dateTimePattern) {
         FORMATTER = DateTimeFormatter.ofPattern(dateTimePattern);
     }
 
-    public static void open(String log_file) throws IOException {
-        writer = new BufferedWriter(new FileWriter(log_file, true));
+    public void open() throws IOException {
+        this.writer = new BufferedWriter(new FileWriter(this.logFile, true));
     }
 
-    public static void close() throws IOException {
-        if (writer != null) {
-            writer.close();
+    public void close() throws IOException {
+        if (this.writer != null) {
+            this.writer.close();
         }
     }
 
-    public static synchronized void log(String message, LogLevel level) {
+    public synchronized void log(String message, LogLevel level) {
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(FORMATTER);
         String logMessage = String.format("[%s] [%s] %s", formattedTime, level, message);
 
         try {
-            writer.write(logMessage);
-            writer.flush();
+            this.writer.write(logMessage);
+            this.writer.flush();
         } catch (IOException e) {
             System.err.println("Error: Could not write the log file: " + e.getMessage());
         }
     }
 
-    public static void debug(String message) {
+    public void debug(String message) {
         log(message, LogLevel.DEBUG);
     }
 
-    public static void info(String message) {
+    public void info(String message) {
         log(message, LogLevel.INFO);
     }
 
-    public static void warning(String message) {
+    public void warning(String message) {
         log(message, LogLevel.WARNING);
     }
 
-    public  static  void error(String message) {
+    public  void error(String message) {
         log(message, LogLevel.ERROR);
     }
 }
